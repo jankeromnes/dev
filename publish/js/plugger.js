@@ -1,5 +1,5 @@
 
-(function(){var debug=true;var console=(console&&debug)?console:{log:function(){for(var arg in arguments)
+(function(){var debug=true;var console=(window.console&&debug)?window.console:{log:function(){for(var arg in arguments)
 console.data=(console.data?console.data:'')+arg+' ';console.data+='\n';}};var dmp=new diff_match_patch();window.client={user:+(new Date()),rev:0,copy:'',lastcopy:''};var plug={newcontent:function(content){var newdiff=dmp.diff_main(client.lastcopy,content);if(newdiff.length>2){dmp.diff_cleanupSemantic(newdiff);dmp.diff_cleanupEfficiency(newdiff);}
 if(newdiff.length!==1||newdiff[0][0]!==DIFF_EQUAL){client.copy=client.lastcopy=content;Scout.send(sending(decodeURI(dmp.diff_toDelta(newdiff)).replace('%','%25')))();}}};var givePlug=function(onnewcontent,onnewdiff){if(onnewcontent){plug.onnewcontent=onnewcontent;client.copy=onnewcontent(client.copy);plug.onnewdiff=onnewdiff;}
 return plug;};var Scout2=Scout.maker();function sync(client,delta,workingcopy,applylocally,send){var lastcopydiff=dmp.diff_fromDelta(client.lastcopy,delta);var lastcopypatch=dmp.patch_make(client.lastcopy,lastcopydiff);client.lastcopy=dmp.patch_apply(lastcopypatch,client.lastcopy)[0];workingcopy=applylocally(lastcopypatch);var newdiff=dmp.diff_main(client.lastcopy,workingcopy);if(newdiff.length>2){dmp.diff_cleanupSemantic(newdiff);dmp.diff_cleanupEfficiency(newdiff);}
